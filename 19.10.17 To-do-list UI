@@ -1,0 +1,150 @@
+# To-do-list app만들기
+
+## 1 app
+- 1 ) app 만들기 : `create-react-native-app <app이름>`
+- 2 ) 실행 : `yarn start` or `npm start`
+
+## 2 가상 디바이스연결
+
+## 3 RNA code
+### 1 기본 UI Component
+```javascript
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import Header from './app/component/header';
+import Subtitle from './app/component/subtitle';
+import Input from './app/component/input';
+import Listitem from './app/component/listitems';
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+
+      <View style={styles.headercenter}>
+        <Header/>
+      </View>
+
+      <View style={styles.subtitleposition}>
+        <Subtitle title="해야 할 일"/>
+        <Input/>
+      </View>
+
+      <View style={styles.subtitleposition}>
+        <Subtitle title="해야 할 일 목록"/>
+        <Listitem name = "수영 알아보기"/>
+        <Listitem name = "커튼 주문하기"/>
+      </View>
+
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+
+  headercenter: {
+    alignItems : "center",
+  },
+
+  subtitleposition : {
+    marginLeft : 50,
+  },
+});
+
+// react-native에 text, view, stylesheet이라는 component가 있는거임
+// alignItems는 가로, justifycontent는 세로 정렬
+```
+기본적으로 UI에 나타낼 전체 Component는 다음과 같이 하나의 component로 구성하고 내부에 다른 component를 import해서 추가하는 식으로 진행하고
+<br/><br/>
+UI의 구조는 `View` tag로 블럭을 나누고 styleSheet로 style을 만들어 다음과 같이 사용한다
+<br/><br/>
+여기서 사용한 component는 function이라서 props도 사용해줬는데 이건 react 사용법과 같다
+<br/><br/>
+### 2 하위 Component
+- 1 ) Input
+```javascript
+import React from 'react';
+import { StyleSheet, TextInput } from 'react-native';
+
+export default function Input() {
+  return (
+      <TextInput
+        style = {styles.input}
+        placeholder={"할 일을 입력해주세요"}
+        maxLength = {30}
+        returnKeyType= "done"
+    />
+  );
+};
+
+const styles = StyleSheet.create({
+    input : {
+        fontSize : 17,
+        fontWeight : 'bold',
+        marginTop : 10,
+        marginBottom : 10,
+    },
+  });
+
+// View와 Text는 글자입력에 대한 component이고 input은 다음과 같이
+// TextInput이라는 component를 import해서 사용해줘야한다
+```
+- 2 ) list items
+```javascript
+import React from 'react';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity  } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+
+export default function listitem ({name}) {
+  return (
+    <View style = {styles.listitembox}>
+        <View style={styles.makerow}>
+            <TouchableOpacity>
+                <AntDesign name = "checkcircle" size={20} style = {styles.circle}/>
+            </TouchableOpacity>
+
+            <Text style = {styles.itemtext}>{name}</Text>
+        </View>
+        
+        <TouchableOpacity>
+            <AntDesign name = "close" size={20}/>
+        </TouchableOpacity>
+    </View>
+  );
+};
+
+const {width, height} = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+    listitembox : {
+        padding : 5,
+        borderBottomWidth : 1,
+        marginTop: 10,
+        width : width - 120,
+        borderBottomColor : 'black',
+        flexDirection : 'row',
+        alignItems : 'center',
+        justifyContent : 'space-between',
+    },
+
+    itemtext : {
+        fontSize: 20,
+        fontWeight : 'bold',
+        marginLeft : 10,
+    },
+
+    makerow : {
+        flexDirection : 'row',
+    },
+
+    circle : {
+        
+    }
+  });
+```
+여기서 Dimensions은 device의 크기를 확인하고 조정하기위해 사용, TouchableOpacity는 event를 할 수 있게 해주고
+<br/><br/>
+AntDesign은 아이콘을 따온거임 그리고 여기서 사용된 css 사용법을 알아두자
