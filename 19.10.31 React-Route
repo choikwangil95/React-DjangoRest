@@ -1,0 +1,125 @@
+## React Route
+React는 컴포넌트 기반의 SPA를 만드는데 최적화<br/>
+별도로 다른 페이지로 이동을 하는 기능인 라우팅은 제공 X <br/>
+React는 react-router라는 별도의 라이브러리를 이용하여 라우팅 가능<br/><br/>
+참고 유튜브 https://www.youtube.com/watch?v=Z-CjMnOjg0I&list=PL4cUxeGkcC9ij8CfkAY2RAGb-tmkNwQHG&index=30
+### react-route-dom
+`yarn add react-router-dom`
+```javascript
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { Home, About, User } from './pages';
+
+class App extends Component {
+  render() {
+    return (
+      <Router>
+        <div>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/about">About</Link>
+              </li>
+              <li>
+                <Link to="/user">User</Link>
+              </li>
+            </ul>
+          </nav>
+
+          <Route exact path='/' component={Home}/>
+          <Route path='/about' component={About}/>
+          <Route path='/user' component={User}/>
+        </div>
+      </Router>
+    );
+  }
+}
+
+export default App;
+```
+라우팅을 위해 Router로 전체를 감싸주고<br/>
+Route로 주소을 설정하고 Link로 지정한 주소로 라우팅
+
+### router parameters
+라우트를 설정한 컴포넌트는 위와 같이 3가지의 특정 props 을 전달받는다 <br/>
+
+history : push, replace를 통해 다른 경로로 이동하거나 페이지 전환을 할 수 있습니다.<br/>
+location : 현재 경로에 대한 정보를 지니고 있습니다.<br/>
+match : 어떤 라우트에 매칭 되었는지 정보를 가지고 있습니다.<br/>
+
+#### componenet에 params 등록과 사용
+`<Route exact path="/posts/:id" component={Post}/>` 다음과같이 `/:something`으로 params를 주고
+```python
+import React from 'react';
+
+class Post extends React.Component {
+    state = {
+        post : null
+    }
+
+    async componentDidMount() {
+        try {
+            let id = this.props.match.params.id;
+
+            const res = await fetch('http://127.0.0.1:8000/api/essay/' + id);
+            const post = await res.json();
+            console.log(post);
+            console.log(post.title);
+
+            this.setState({
+                post
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    render() {
+        const post = this.state.post ? (
+            <div>
+                <p> 작성자 : {this.state.post.author_name}</p>
+                <p> title : {this.state.post.title}</p>
+                <p> 내용 : {this.state.post.body}</p>
+            </div>
+        ) : (
+            <div>
+                <p>Loading</p>
+            </div>
+        )
+
+        // async니까 이렇게 해줘야하는듯
+
+        return (
+            <div>
+                {post}
+            </div>
+        );
+    }
+}
+
+export default Post;
+```
+다음과같이 match props에서 params를 가져오ㅏ서 사용한다<br/>
+여기서는 
+```python
+posts.py
+
+     const {datas, essays} = this.state;
+        return (
+            <div> 
+                {essays.map(item => (
+                    <div key={item.pk}>
+                        <li><Link to={`${this.props.match.path}/${item.pk}`}>Title : {item.title}</Link></li>
+                        <span>subs : {item.body}</span>
+                    </div>
+                ))}
+            </div>
+        );
+```
+match.path와 pk값을 사용해서 url을 주고 </br>
+route에서 설정한 params인 id값에 Link url을 부여하여 해당 pk를 가진 post를 가져와서 보여줬음
+
+
