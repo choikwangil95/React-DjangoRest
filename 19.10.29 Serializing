@@ -1,0 +1,128 @@
+## backend server
+back은 기존에 django project, app, settings, model, migration 처럼 해주고 <br/>
+DRF를 추가해서 front에 넘겨주면 된다<br/>
+
+### Django Rest Framework
+`pip install djangorestframework` 먼저 설치해주고 settings.py에 등록 및 추가해준다
+```python
+#backend/djangoreactapi/settings.py
+...
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    
+    'post',
+    'rest_framework', #추가
+    
+]
+...
+#이하 추가
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ]
+}
+```
+### Serializing
+django + react 앱은 api요청을 통해 데이터를 주고 받는데api요청 및 반환값은데이터포멧이<br/>
+JSON(JavaScript Object Notation)으로 되어있다. 그래서 반환값을 JSON으로 직렬화(Serialize)해주는 것이 필요하다. <br/>
+이때 필요한 것이 DRF의 serializers이다. 만들어져있는 파일이 아니니 직접 만들어 작성해야한다.
+```python
+#backend/post/serializers.py
+
+from rest_framework import serializers
+from .models import Post
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'title',
+            'content',
+        )
+        model = Post
+```
+그리고 작성한 serialize를 가져와서 viewset으로 views.py
+```python
+from rest_framework import viewsets
+from .models import Essay, Album, Files
+from .serializers import EssaySerializer, AlbumSerializer, FilesSerializer
+from rest_framework.filters import SearchFilter
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
+
+class PostViewSet(viewsets.ModelViewSet):
+
+    queryset = Essay.objects.all()
+    serializer_class = EssaySerializer
+
+    filter_backends = [SearchFilter]
+    search_fields = ['title', 'body'] 
+
+    def perform_create(self, serializer):
+        serializer.save(author = self.request.user)
+
+    # def get_queryset(self):
+    #     qs = super().get_queryset()
+
+    #     if self.request.user.is_authenticated:
+    #         qs = qs.filter(author = self.request.user)
+    #     else:
+    #         qs = qs.none()
+    #     return  qs
+```
+### api 접근제어 (Cross Origin Resource Sharing)
+script태그로 쌓여진 코드에서의 다른 도메인에 대한 요청은 Same-origin policy에 대한 규약으로 인해 접근이 불가하다.<br/>ㄸ>
+따라서 CORS를 추가해준다 `pip install django-cors-headers`<br/>
+
+### server에서 data가져오기
+fetch 또는 axios를 이용하여 data를 가져와서 state에 저장하고 사용해주면된다
+```python
+class Posts extends React.Component {
+    state = {
+        datas: [],
+        essays: []
+    };
+  
+    async componentDidMount() {
+        try {
+            const res = await fetch('http://127.0.0.1:8000/api/');
+            const datas = await res.json();
+            console.log(datas);
+            console.log(datas.essay);
+            const datas_essays = await fetch(datas.essay);
+            const essays = await datas_essays.json();
+            console.log(essays);
+            this.setState({
+                datas,
+                essays
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    
+    render() {
+        const {datas, essays} = this.state;
+        return (
+            <div> 
+                {essays.map(item => (
+                    <div key={item.pk}>
+                        <li><Link to={`${this.props.match.path}/${item.pk}`}>Title : {item.title}</Link></li>
+                        <span>subs : {item.body}</span>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+}
+
+export default Posts;
+
+```
+
