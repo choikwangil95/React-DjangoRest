@@ -9,12 +9,12 @@
 19-10-22 : map index해결 / 날씨앱(API fetch)</br>
 19-10-23 : diary app project (navigation)<br/>
 ### 다섯째주
-19-10-29 : django REST server에있는 data serializing 
+19-10-29 : django REST server에있는 data serializing<br/> 
 19-10-31 : react-route 사용해서 front routing하기
 <br/><br/>
 ## 11월
 ### 첫째주
-19-11-01 : authentification / front에서 server로 data보내기 (rest-auth)
-19-11-03 : authentification / front에서 server로 data보내기 (rest-knox)
+19-11-01 : authentification / front에서 server로 data보내기 (rest-auth)<br/>
+19-11-03 : authentification (rest-knox)<br/>
 ### 둘째주
-19-11-04 : React에서 authentification
+19-11-04 : React에서 authentification (input, event, form)<br/>
