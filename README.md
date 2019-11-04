@@ -14,4 +14,7 @@
 <br/><br/>
 ## 11월
 ### 첫째주
-19-11-01 : authentification / front에서 server로 data보내기
+19-11-01 : authentification / front에서 server로 data보내기 (rest-auth)
+19-11-03 : authentification / front에서 server로 data보내기 (rest-knox)
+### 둘째주
+19-11-04 : React에서 authentification
