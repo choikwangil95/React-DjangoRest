@@ -20,3 +20,7 @@
 19-11-04 (월) : React에서 authentification (input, event, form)와 axios<br/>
 19-11-05 (화) : React-Redux로 state분리<br/>
 19-11-06 (수) : Redux 마스터한다<br/>
+19-11-07 (목) : Redux 다시<br/>
+19-11-08 (금) : Redux 다시<br/>
+19-11-09 (토) : Redux 다시<br/>
+19-11-10 (일) : Redux 다시<br/>
