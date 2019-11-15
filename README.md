@@ -28,6 +28,6 @@
 19-11-11 (월) : Redux update<br>
 19-11-12 (화) : axios put error why?<br>
 19-11-13 (수) : update complete/ authentification<br>
-19-11-14 (목) : authentification<br>
-19-11-15 (금) : <br>
+19-11-14 (목) : authentification <br>
+19-11-15 (금) : Redux Form<br>
 19-11-16 (토) : <br>
